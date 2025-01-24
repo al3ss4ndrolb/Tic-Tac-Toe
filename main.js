@@ -1,22 +1,28 @@
+// Gameboard object
 const Gameboard = {
   gameboard: ["", "", "", "", "", "", "", "", ""],
+
   placeMarker(index, mark) {
     if (this.gameboard[index] === "") {
       this.gameboard[index] = mark;
     }
   },
+
   isSquareEmpty(index) {
     return this.gameboard[index] === "";
   },
+
   reset() {
     this.gameboard = ["", "", "", "", "", "", "", "", ""];
   },
 };
 
-const createPlayer = (name, mark) => {
+// Factory function to create a player
+function createPlayer(name, mark) {
   return { name, mark };
-};
+}
 
+// GameFlow object
 const GameFlow = {
   currentPlayer: null,
   players: [],
@@ -47,18 +53,14 @@ const GameFlow = {
       [2, 4, 6], // Diagonals
     ];
 
-    for (let combination of winningCombinations) {
+    return winningCombinations.some((combination) => {
       const [a, b, c] = combination;
-      if (
+      return (
         this.gameboard.gameboard[a] !== "" &&
         this.gameboard.gameboard[a] === this.gameboard.gameboard[b] &&
         this.gameboard.gameboard[a] === this.gameboard.gameboard[c]
-      ) {
-        return true; // Winner found
-      }
-    }
-
-    return false; // No winner
+      );
+    });
   },
 
   checkForTie() {
@@ -69,3 +71,10 @@ const GameFlow = {
     return isBoardFull && isNoWinner;
   },
 };
+
+// Create players
+const player1 = createPlayer("Alice", "X");
+const player2 = createPlayer("Bob", "O");
+
+// Initialize game flow
+GameFlow.initialize(player1, player2);
