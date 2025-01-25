@@ -1,39 +1,103 @@
-.game-container {
-  display: grid;
-  grid-template-columns: repeat(3, 100px);
-  gap: 5px;
-  margin: 20px auto;
-  width: 310px;
+:root {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --accent-color: #0f3460;
+  --text-color: #e94560;
+  --highlight-color: #6acdff;
 }
 
-.game-square {
-  width: 100px;
-  height: 100px;
-  border: 2px solid black;
+body {
+  font-family: "Arial", sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-color);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  font-size: 60px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.game-square.winner {
-  background-color: #90ee90;
-}
-
-#game-status {
-  text-align: center;
-  margin: 20px 0;
-  font-size: 20px;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .player-form {
-  text-align: center;
-  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 400px;
 }
 
+.player-form input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: var(--bg-secondary);
+  border: 2px solid var(--accent-color);
+  color: var(--text-color);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.player-form input:focus {
+  border-color: var(--highlight-color);
+}
+
+#game-status {
+  font-size: 24px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.game-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.game-square {
+  aspect-ratio: 1;
+  background-color: var(--bg-secondary);
+  border: 2px solid var(--accent-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4rem;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  border-radius: 12px;
+}
+
+.game-square:hover {
+  background-color: var(--accent-color);
+  transform: scale(1.05);
+}
+
+.game-square.winner {
+  background-color: #4caf50;
+  color: white;
+}
+
+#start-game,
 #restart-game {
-  margin: 0 auto;
-  display: block;
+  background-color: var(--highlight-color);
+  color: var(--bg-primary);
+  border: none;
+  padding: 12px 24px;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 20px;
+}
+
+#start-game:hover,
+#restart-game:hover {
+  background-color: #4ecaff;
+  transform: scale(1.05);
 }

@@ -55,13 +55,13 @@ const GameFlow = {
       [2, 4, 6], // Diagonals
     ];
 
-    return winningCombinations.some((combination) => {
+    return winningCombinations.find((combination) => {
       const [a, b, c] = combination;
-      return (
-        this.gameboard.gameboard[a] !== "" &&
+      return this.gameboard.gameboard[a] !== "" &&
         this.gameboard.gameboard[a] === this.gameboard.gameboard[b] &&
         this.gameboard.gameboard[a] === this.gameboard.gameboard[c]
-      );
+        ? combination
+        : null;
     });
   },
 
@@ -82,6 +82,7 @@ const DisplayController = {
   restartButton: document.getElementById("restart-game"),
   player1NameInput: document.getElementById("player1-name"),
   player2NameInput: document.getElementById("player2-name"),
+  gameActive: false,
 
   initialize() {
     this.renderBoard();
@@ -105,11 +106,8 @@ const DisplayController = {
   },
 
   startGame() {
-    console.log("Start game button clicked");
     const player1Name = this.player1NameInput.value || "Player 1";
     const player2Name = this.player2NameInput.value || "Player 2";
-    console.log("Player 1 Name:", player1Name);
-    console.log("Player 2 Name:", player2Name);
 
     const player1 = createPlayer(player1Name, "X");
     const player2 = createPlayer(player2Name, "O");
@@ -120,6 +118,8 @@ const DisplayController = {
     this.player1NameInput.style.display = "none";
     this.player2NameInput.style.display = "none";
     this.restartButton.style.display = "block";
+    this.gameActive = true;
+    this.enableBoard();
   },
 
   restartGame() {
@@ -131,9 +131,12 @@ const DisplayController = {
     this.restartButton.style.display = "none";
     this.statusDisplay.textContent = "";
     this.renderBoard();
+    this.gameActive = false;
   },
 
   handleSquareClick(e) {
+    if (!this.gameActive) return;
+
     const square = e.target.closest(".game-square");
     if (!square) return;
 
@@ -143,8 +146,10 @@ const DisplayController = {
       if (GameFlow.gameboard.placeMarker(index, GameFlow.currentPlayer.mark)) {
         square.textContent = GameFlow.currentPlayer.mark;
 
-        if (GameFlow.checkForWinner()) {
+        const winningCombo = GameFlow.checkForWinner();
+        if (winningCombo) {
           this.statusDisplay.textContent = `${GameFlow.currentPlayer.name} wins!`;
+          this.highlightWinningSquares(winningCombo);
           this.disableBoard();
         } else if (GameFlow.checkForTie()) {
           this.statusDisplay.textContent = "It's a tie!";
@@ -157,8 +162,27 @@ const DisplayController = {
     }
   },
 
+  highlightWinningSquares(winningCombo) {
+    winningCombo.forEach((index) => {
+      const square = this.gameBoard.querySelector(
+        `.game-square[data-index="${index}"]`
+      );
+      square.classList.add("winner");
+    });
+  },
+
   disableBoard() {
+    this.gameActive = false;
     this.gameBoard.style.pointerEvents = "none";
+  },
+
+  enableBoard() {
+    this.gameActive = true;
+    this.gameBoard.style.pointerEvents = "auto";
+    this.gameBoard.querySelectorAll(".game-square").forEach((square) => {
+      square.textContent = "";
+      square.classList.remove("winner");
+    });
   },
 };
 
